@@ -1,0 +1,101 @@
+﻿@model Lease
+
+<h2 class="mb-4">Lease Details</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4 class="card-title">Lease Information</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3 font-weight-bold">
+                Property Location:
+            </dt>
+            <dd class="col-sm-9">
+                @Model.Property.Location
+            </dd>
+
+            <dt class="col-sm-3 font-weight-bold">
+                Tenant Name:
+            </dt>
+            <dd class="col-sm-9">
+                @Model.Tenant.UserName
+            </dd>
+
+            <dt class="col-sm-3 font-weight-bold">
+                Total Rent Amount:
+            </dt>
+            <dd class="col-sm-9">
+                @Model.TotalRentAmount ₤
+            </dd>
+
+            <dt class="col-sm-3 font-weight-bold">
+                Lease ID:
+            </dt>
+            <dd class="col-sm-9">
+                @Model.LeaseID
+            </dd>
+
+            <dt class="col-sm-3 font-weight-bold">
+                Start Date:
+            </dt>
+            <dd class="col-sm-9">
+                @Model.StartDate.ToShortDateString()
+            </dd>
+
+            <dt class="col-sm-3 font-weight-bold">
+                End Date:
+            </dt>
+            <dd class="col-sm-9">
+                @Model.EndDate.ToShortDateString()
+            </dd>
+
+            <dt class="col-sm-3 font-weight-bold">
+                Status:
+            </dt>
+            <dd class="col-sm-9">
+                <span class="btn @GetStatusBadgeClass(@Model.Status)">@Model.Status</span>
+            </dd>
+        </dl>
+
+        @if (Model.Status == "Ongoing" && DateTime.Now < Model.StartDate.AddDays(-2))
+        {
+            <form asp-action="TerminateLease" method="post" class="mt-3">
+                <input type="hidden" name="leaseId" value="@Model.LeaseID" />
+                <button type="submit" class="btn btn-danger">Terminate Lease</button>
+            </form>
+        }
+    </div>
+</div>
+@if (ViewBag.currentUserID != null && ViewBag.currentUserID == "0f1f2db3-3a82-4d83-8c5d-6596c25e19c1")
+{
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+}
+else{
+    <div class="mt-3">
+        <a asp-action="Index" asp-controller="Property" class="btn btn-secondary">Back to Home</a>
+    </div>
+}
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+}
+
+@functions {
+    // Function to return badge class based on status
+    private string GetStatusBadgeClass(string status)
+    {
+        return status switch
+        {
+            "Ongoing" => "btn-success btn-sm",
+            "Terminated" => "btn-danger btn-sm",
+            "Completed" => "btn-info btn-sm",
+            _ => "btn-secondary btn-sm"
+        };
+    }
+}

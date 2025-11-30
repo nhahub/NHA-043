@@ -1,0 +1,31 @@
+﻿@model IEnumerable<depi_real_state_management_system.Models.Lease>
+
+<h2>Lease List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Property Location</th>
+            <th>Tenant Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lease in Model)
+        {
+            <tr>
+                <td>@lease.Property.Location</td>
+                <td>@lease.Tenant.UserName</td>
+                <td>@lease.StartDate.ToShortDateString()</td>
+                <td>@lease.EndDate.ToShortDateString()</td>
+                <td>@lease.Status</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@lease.LeaseID" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

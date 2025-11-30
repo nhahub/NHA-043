@@ -1,0 +1,107 @@
+﻿@model PropertyViewModel
+
+<h2 style="text-align:center;">Add New Property</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <!-- Location -->
+    <div class="form-floating mb-3">
+        <input asp-for="Location" class="form-control" id="location" placeholder="Location" style="border-radius:20px">
+        <label for="location">Location</label>
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+
+    <!-- Size -->
+    <div class="form-floating mb-3">
+        <input asp-for="Size" class="form-control" id="size" placeholder="Size" style="border-radius:20px">
+        <label for="size">Size</label>
+        <span asp-validation-for="Size" class="text-danger"></span>
+    </div>
+
+    <!-- Price -->
+    <div class="form-floating mb-3">
+        <input asp-for="Price" class="form-control" id="price" placeholder="Price" type="number" style="border-radius:20px">
+        <label for="price">Price</label>
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <!-- Description -->
+    <div class="form-floating mb-3">
+        <textarea asp-for="Description" class="form-control" placeholder="Description" id="description" style="height: 100px"></textarea>
+        <label for="description">Description</label>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <!-- Is Available Checkbox -->
+    <div class="mb-3 form-check">
+        <input asp-for="IsAvailable" type="checkbox" class="form-check-input" id="isAvailable" style="border-radius:20px">
+        <label class="form-check-label" for="isAvailable">Is Available</label>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="form-group mb-3">
+        <label asp-for="Image"></label>
+        <input type="file" asp-for="Image" class="form-control" style="border-radius:20px" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <h4>What this place offers:</h4>
+        <div class="form-check">
+            <input asp-for="HasKitchen" type="checkbox" class="form-check-input" id="kitchen">
+            <label class="form-check-label" for="kitchen">Kitchen</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasDedicatedWorkspace" type="checkbox" class="form-check-input" id="dedicatedWorkspace">
+            <label class="form-check-label" for="dedicatedWorkspace">Dedicated workspace</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasDryer" type="checkbox" class="form-check-input" id="dryer">
+            <label class="form-check-label" for="dryer">Dryer</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasIndoorFireplace" type="checkbox" class="form-check-input" id="indoorFireplace">
+            <label class="form-check-label" for="indoorFireplace">Indoor fireplace</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasHairDryer" type="checkbox" class="form-check-input" id="hairDryer">
+            <label class="form-check-label" for="hairDryer">Hair dryer</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasWifi" type="checkbox" class="form-check-input" id="wifi">
+            <label class="form-check-label" for="wifi">Wifi</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasWasher" type="checkbox" class="form-check-input" id="washer">
+            <label class="form-check-label" for="washer">Washer</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasBackyard" type="checkbox" class="form-check-input" id="backyard">
+            <label class="form-check-label" for="backyard">Backyard</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="AllowsLuggageDropoff" type="checkbox" class="form-check-input" id="luggageDropoff">
+            <label class="form-check-label" for="luggageDropoff">Luggage dropoff allowed</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasLockOnBedroomDoor" type="checkbox" class="form-check-input" id="lockOnBedroomDoor">
+            <label class="form-check-label" for="lockOnBedroomDoor">Lock on bedroom door</label>
+        </div>
+    </div>
+
+
+    <!-- Hidden OwnerId field (passed from the view) -->
+    <input asp-for="OwnerId" type="hidden" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
+
+    <button type="submit" class="btn btn-primary">Add Property</button>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+<style>
+    
+</style>
+

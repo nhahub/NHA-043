@@ -1,0 +1,45 @@
+﻿@model IEnumerable<depi_real_state_management_system.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payments";
+}
+
+<h1>Payments</h1>
+
+<p>
+    <!-- Generic Create Payment button -->
+    <a class="btn btn-primary" asp-action="CreatePayment" asp-controller="Payment">Create New Payment</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tenant</th>
+            <th>Lease ID</th>
+            <th>Amount Paid</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model)
+        {
+            <tr>
+                <td>@payment.Tenant.UserName</td>
+                <td>@payment.LeaseID</td>
+                <td>@payment.AmountPaid</td>
+                <td>@payment.PaymentDate.ToShortDateString()</td>
+                <td>@payment.PaymentStatus</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@payment.PaymentID" class="btn btn-info">Details</a>
+
+                    <!-- Optional: Pay for this specific lease -->
+                    <a asp-action="CreatePayment" asp-controller="Payment" asp-route-leaseId="@payment.LeaseID" class="btn btn-success">
+                        Pay Now
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

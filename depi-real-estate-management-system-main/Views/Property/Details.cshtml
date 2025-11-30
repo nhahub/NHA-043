@@ -1,0 +1,76 @@
+﻿@model Property
+
+<div class="card">
+    <img src="/images/@Model.ImageUrl" class="card-img-top" alt="@Model.Location" />
+    <div class="card-body">
+        <h5 class="card-title">@Model.Location</h5>
+        <p class="card-text">Size: @Model.Size</p>
+        <p class="card-text">Price: @Model.PricePerNight ₤</p>
+        <p class="card-text">Description: @Model.Description</p>
+
+        <h5>What this place offers</h5>
+        <ul class="list-group">
+            @if (Model.HasKitchen)
+            {
+                <li class="list-group-item">Kitchen</li>
+            }
+            @if (Model.HasDedicatedWorkspace)
+            {
+                <li class="list-group-item">Dedicated workspace</li>
+            }
+            @if (Model.HasDryer)
+            {
+                <li class="list-group-item">Dryer</li>
+            }
+            @if (Model.HasIndoorFireplace)
+            {
+                <li class="list-group-item">Indoor fireplace</li>
+            }
+            @if (Model.HasHairDryer)
+            {
+                <li class="list-group-item">Hair dryer</li>
+            }
+            @if (Model.HasWifi)
+            {
+                <li class="list-group-item">Wifi</li>
+            }
+            @if (Model.HasWasher)
+            {
+                <li class="list-group-item">Washer</li>
+            }
+            @if (Model.HasBackyard)
+            {
+                <li class="list-group-item">Backyard</li>
+            }
+            @if (Model.AllowsLuggageDropoff)
+            {
+                <li class="list-group-item">Luggage dropoff allowed</li>
+            }
+            @if (Model.HasLockOnBedroomDoor)
+            {
+                <li class="list-group-item">Lock on bedroom door</li>
+            }
+        </ul>
+
+        <p class="card-text">
+            @if (Model.IsAvailable)
+            {
+                <span class="badge bg-success">Available</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">Unavailable</span>
+            }
+        </p>
+
+        @if (Model.IsAvailable)
+        {
+            <a asp-action="CreateBooking" asp-controller="Lease" asp-route-id="@Model.PropertyID" class="btn btn-primary">Book</a>
+        }
+        else
+        {
+            <p class="text-danger">This property is currently unavailable for booking.</p>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,145 @@
+﻿@model Lease
+
+<h2>Book Property</h2>
+
+<form id="bookingForm" asp-action="CreateBooking" method="post">
+    <input type="hidden" asp-for="PropertyID" />
+    <input type="hidden" asp-for="TenantID" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
+    <input asp-for="Status" type="hidden" value="Ongoing" />
+    <input asp-for="Tenant" type="hidden" value="@Model.Tenant" />
+    <input asp-for="Property" type="hidden" value="@Model.Property" />
+
+    <div class="form-group">
+        <label asp-for="StartDate"></label>
+        <input asp-for="StartDate" id="startDate" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndDate"></label>
+        <input asp-for="EndDate" id="endDate" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="form-group">
+        <label>Total Rent:</label>
+        <input asp-for="TotalRentAmount" id="totalRent" type="hidden" value="0" />
+        <p id="totalRentDisplay">0 ₤</p>
+    </div>
+
+    <button type="button" id="submitBtn" class="btn btn-primary">Submit</button>
+</form>
+
+<!-- Modal for booking confirmation -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Booking</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to book this property? The total rent amount is <strong id="modalTotalRent">0 ₤</strong>.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmBookingBtn">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for error display -->
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Booking Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Error message will be dynamically inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Set minimum date for StartDate and EndDate
+        var today = new Date().toISOString().split('T')[0];
+        $('#startDate').attr('min', today);
+        $('#endDate').attr('min', today);
+
+        // Function to calculate total rent
+        function calculateTotalRent() {
+            var startDate = new Date($('#startDate').val());
+            var endDate = new Date($('#endDate').val());
+            var oneDay = 24 * 60 * 60 * 1000; // Hours*minutes*seconds*milliseconds
+            var nights = Math.round((endDate - startDate) / oneDay);
+            var pricePerNight = @Model.Property.PricePerNight;
+
+            if (nights > 0) {
+                var totalRent = nights * pricePerNight;
+                $('#totalRent').val(totalRent);  // Set the hidden input value
+                $('#totalRentDisplay').text(totalRent + ' ₤');  // Display the total rent
+            } else {
+                $('#totalRent').val(0);
+                $('#totalRentDisplay').text('0 ₤');
+            }
+        }
+
+        // Trigger the calculation when start or end date changes
+        $('#startDate, #endDate').on('change', function () {
+            calculateTotalRent();
+            // Set the min value of EndDate to the value of StartDate
+            var startDateValue = $('#startDate').val();
+            $('#endDate').attr('min', startDateValue);
+        });
+
+        // Show Bootstrap modal for confirmation
+        $('#submitBtn').on('click', function () {
+            var totalRent = $('#totalRent').val();
+
+            if (totalRent > 0) {
+                $('#modalTotalRent').text(totalRent + ' ₤');
+                $('#confirmModal').modal('show'); // Show the modal
+            } else {
+                alert("Please select valid start and end dates.");
+            }
+        });
+
+        // Confirm booking when modal confirmation button is clicked
+        $('#confirmBookingBtn').on('click', function () {
+            var form = $('#bookingForm');
+
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl; // Redirect on success
+                    } else {
+                        $('#errorModal .modal-body').text(response.message); // Set error message
+                        $('#errorModal').modal('show'); // Show error modal
+                    }
+                },
+                error: function () {
+                    $('#errorModal .modal-body').text('An error occurred while processing your request.');
+                    $('#errorModal').modal('show');
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,48 @@
+﻿@model depi_real_state_management_system.Models.Payment
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<h1>Payment Details</h1>
+
+<div>
+    <h4>Payment</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            Tenant
+        </dt>
+        <dd class="col-sm-9">
+            @Model.Tenant.UserName
+        </dd>
+        <dt class="col-sm-3">
+            Lease ID
+        </dt>
+        <dd class="col-sm-9">
+            @Model.LeaseID
+        </dd>
+        <dt class="col-sm-3">
+            Amount Paid
+        </dt>
+        <dd class="col-sm-9">
+            @Model.AmountPaid
+        </dd>
+        <dt class="col-sm-3">
+            Payment Date
+        </dt>
+        <dd class="col-sm-9">
+            @Model.PaymentDate.ToShortDateString()
+        </dd>
+        <dt class="col-sm-3">
+            Status
+        </dt>
+        <dd class="col-sm-9">
+            @Model.PaymentStatus
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>

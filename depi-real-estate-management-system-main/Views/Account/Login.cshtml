@@ -1,0 +1,50 @@
+﻿@model ApplicationUser
+<h1>Login</h1> <br />
+
+<form method="post" asp-action="ConfirmLogin">
+  <div class="mb-3">
+    <label for="exampleInputUsername" class="form-label">Username</label>
+    <input asp-for="UserName" type="text" class="form-control" id="exampleInputUsername" aria-describedby="emailHelp">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input asp-for="PasswordHash" type="password" class="form-control" id="exampleInputPassword1">
+  </div>
+  <div class="mb-3 form-check">
+    <input asp-for="RememberMe" type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Remember me</label>
+  </div>
+
+    @if (ViewBag.Status == 0)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+    <button type="submit" class="btn btn-primary">Login</button>
+    <a href="/account/register" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Register</a>
+</form>
+<style>
+    div{
+        border-radius:20px;
+    }
+     h1 {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #333;
+    }
+     form {
+        max-width: 800px;
+        margin: 0 auto;
+        background: linear-gradient(130deg,#F5DEB3 0%,#EBDC57 60%);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    }
+     label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 16px;
+    }
+</style>

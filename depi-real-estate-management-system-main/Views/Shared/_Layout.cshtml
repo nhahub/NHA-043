@@ -1,0 +1,194 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> _UserManager
+
+@{
+    ApplicationUser currentUser = null;
+    if (User.Identity.IsAuthenticated)
+    {
+        currentUser = await _UserManager.GetUserAsync(User);
+    }
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - depi_real_state_management_system</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/depi_real_state_management_system.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header >
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="margin:0;padding:0;">
+            <div class="container-fluid" style="background-color:wheat;">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Property" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Payment</a>
+                            </li>
+                        }
+                        
+                        @if (User.IsInRole("Admin")) // Check if current user's ID matches admin's ID
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Lease" asp-action="Index">Lease</a>
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Home/ContactUs">Contact Us</a>
+                        </li>
+
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-primary" asp-area="" asp-controller="Property" asp-action="Create" style="background-color:gold;margin-top:2%;">Add Property</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Profile Picture and Dropdown (Right aligned) -->
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="/profilesimg/@(currentUser?.ProfileImage ?? Url.Content("default.jpg"))" alt="Profile" class="rounded-circle" width="40" height="40" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Profile" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">My Profile</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                }
+                                else
+                                {
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                                }
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - depi_real_state_management_system - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+       
+
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+<style>
+    /* ------------ GLOBAL STYLE ------------ */
+    body {
+        background-color: #F2E6E4;
+
+    }
+
+    /* ------------ NAVBAR ------------ */
+    .navbar {
+        padding: 0.75rem 1rem;
+        background-color: #fff !important;
+        border-bottom: 2px solid #e5e5e5;
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 20px;
+        padding: 10px 16px;
+        transition: 0.3s ease;
+        font-weight: 500;
+        margin-right:80px;
+    }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            color: #0d6efd !important;
+        }
+
+        /* Highlight active menu */
+        .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            font-weight: 600;
+        }
+
+    /* Admin / Manager buttons */
+    .navbar-nav .btn-primary {
+        border-radius: 8px;
+        padding: 6px 14px;
+        margin-left: 10px;
+    }
+
+    /* ------------ PROFILE IMAGE + DROPDOWN ------------ */
+    .nav-item.dropdown img {
+        border: 2px solid #ddd;
+        transition: 0.3s ease;
+    }
+
+        .nav-item.dropdown img:hover {
+            border-color: #0d6efd;
+        }
+
+    /* Dropdown menu styling */
+    .dropdown-menu {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    }
+
+        .dropdown-menu .dropdown-item {
+            padding: 10px 15px;
+            transition: 0.2s ease;
+            font-size: 15px;
+        }
+
+            .dropdown-menu .dropdown-item:hover {
+                background-color: #f1f1f1;
+                color: #0d6efd;
+            }
+
+    /* ------------ MAIN CONTENT ------------ */
+    .container main {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    }
+
+    /* ------------ FOOTER ------------ */
+    footer {
+        padding: 15px 0;
+        text-align: center;
+        font-size: 16px;
+    }
+
+</style>

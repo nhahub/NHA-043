@@ -1,0 +1,66 @@
+﻿@using System.IO
+@using depi_real_state_management_system.Models
+@model IEnumerable<Property>
+
+<div class="row">
+    @foreach (var property in Model)
+    {
+        <div class="col-md-3">
+            <a href="@Url.Action("Details", "Property", new { id = property.PropertyID })" class="text-decoration-none">
+                <div class="card property-card">
+                    <img src="/images/@(property.ImageUrl ?? Url.Content("airbnb.jpg"))" alt="@property.Location" style="width: 100%; height: 200px; object-fit: cover;" />
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@property.Location</h5>
+                        <p class="card-text">Size: @property.Size</p>
+                        <p class="card-text">Price: @property.PricePerNight ₤</p>
+                        <p class="card-text">Description: <span class="description-text">@property.Description</span></p>
+                        <p class="card-text">
+                            @if (property.IsAvailable)
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Unavailable</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    .property-card {
+        min-height: 350px;
+        max-height: 450px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: box-shadow 0.3s ease;
+    }
+
+        .property-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .description-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .text-decoration-none {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>

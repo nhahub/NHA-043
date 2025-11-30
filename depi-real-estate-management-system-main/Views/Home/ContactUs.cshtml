@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<h1>Contact Us</h1>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.Message
+    </div>
+}
+
+<form method="post" action="/Home/ContactUs">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" required />
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required />
+    </div>
+    <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
+
+<style>
+    body {
+        background-color: #f7f9fc;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+       background: linear-gradient(130deg,#F5DEB3 0%,#EBDC57 60%);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    }
+
+    label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #ccc;
+        transition: .3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #4d90fe;
+            box-shadow: 0 0 8px rgba(77, 144, 254, 0.3);
+        }
+
+    textarea.form-control {
+        resize: none;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056d2;
+        }
+
+    .alert-success {
+        max-width: 600px;
+        margin: 0 auto 20px auto;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 10px;
+        text-align: center;
+    }
+</style>
+
+
+
